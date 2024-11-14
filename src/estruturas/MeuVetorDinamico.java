@@ -1,18 +1,22 @@
 package estruturas;
 
-public class MeuVetorDinamico<T> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class MeuVetorDinamico<E> implements EstruturaIF<E> {
     private int tamanhoAtual;        
     private int capacidadeTotal;     
-    private T[] valores;     
+    private E[] valores;     
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")  //ta dando warning na criação generica
     public MeuVetorDinamico() {
         capacidadeTotal = 10;     
         tamanhoAtual = 0;
-        valores = (T[]) new Object[capacidadeTotal];  
+        valores = (E[]) new Object[capacidadeTotal];  
     }
 
-    public void adicionar(T valor) {
+    @Override
+    public void adicionar(E valor) {
         if (tamanhoAtual == capacidadeTotal) {
             redimensionar();
         }
@@ -20,15 +24,17 @@ public class MeuVetorDinamico<T> {
         tamanhoAtual++;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //ta dando warning na criação generica
     private void redimensionar() {
-        capacidadeTotal *= 2;
-        T[] novoArray = (T[]) new Object[capacidadeTotal];
+        capacidadeTotal *= 2; // Aumenta a capacidade do vetor (por exemplo, dobrando o tamanho)
+        E[] novoArray = (E[]) new Object[capacidadeTotal];
+        
+        // Copia os elementos do vetor original para o novo vetor redimensionado
         System.arraycopy(valores, 0, novoArray, 0, tamanhoAtual);
         valores = novoArray;
     }
 
-    public T obter(int indice) {
+    public E obter(int indice) {
         if (indice < 0 || indice >= tamanhoAtual) {
             System.out.println("Este índice não existe.");
             return null; 
@@ -36,22 +42,52 @@ public class MeuVetorDinamico<T> {
         return valores[indice];
     }
 
-    public T removerUltimo() {
-        if (tamanhoAtual > 0) {
-            T temp = valores[tamanhoAtual - 1];
-            valores[tamanhoAtual - 1] = null;
-            tamanhoAtual--;
-            return temp;
-        }
-        System.out.println("O Array está vazio, impossível remover o elemento.");
-        return null;
-    }
-
+    @Override
     public int tamanho() {
         return tamanhoAtual;
     }
 
     public boolean estaVazio() {
         return tamanhoAtual == 0;
+    }
+
+    @Override
+        public Iterator<E> iterator() {
+        return new Iterator<E>() {
+            private int indiceAtual = 0;
+
+            @Override
+            public boolean hasNext() {
+                return indiceAtual < tamanhoAtual;
+            }
+
+            @Override
+            public E next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return valores[indiceAtual++];
+            }
+        };
+    }
+
+    public void adicionar(int indice, E valor) {
+        if (indice < 0 || indice > tamanhoAtual) {
+            throw new IndexOutOfBoundsException("Índice fora dos limites.");
+        }
+        
+        // Verifica se o vetor precisa ser redimensionado
+        if (tamanhoAtual == capacidadeTotal) {
+            redimensionar();
+        }
+    
+        // Desloca os elementos à direita para abrir espaço para o novo valor
+        for (int i = tamanhoAtual; i > indice; i--) {
+            valores[i] = valores[i - 1];
+        }
+    
+        // Insere o novo valor na posição indicada
+        valores[indice] = valor;
+        tamanhoAtual++;
     }
 }
