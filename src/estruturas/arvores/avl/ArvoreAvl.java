@@ -1,6 +1,5 @@
 package estruturas.arvores.avl;
 
-import estruturas.lineares.MeuVetorDinamico;
 import estruturas.lineares.MinhaFila;
 import utils.Tweet;
 

@@ -21,18 +21,21 @@ public class Main {
         database = new MeuVetorDinamico<>();
         LeituraDeArquivo.extract_database("tweets_mentioned_persons", database);
 
+        System.out.println("Arvore AVL -> ordenando por número de pessoas mencionadas.");
         arvore = new ArvoreAvl();
         for (int i = 0; i < database.getTamanho(); i++){ arvore.insertByCount(database.obter(i)); }
-        EscritaDeArquivo.write_ordened_tree("tweets_mentioned_persons_count", arvore);
+        EscritaDeArquivo.write_ordened_tree("tweets_mentioned_persons_count_avlTree", arvore);
         arvore = null;
 
+        System.out.println("Arvore AVL -> ordenando por data.");
         arvore = new ArvoreAvl();
         for(int i = 0; i < database.getTamanho(); i++){arvore.insertByDate(database.obter(i));}
-        EscritaDeArquivo.write_ordened_tree("tweets_mentioned_persons_date", arvore);
+        EscritaDeArquivo.write_ordened_tree("tweets_mentioned_persons_date_avlTree", arvore);
         arvore = null;
-
+        
+        System.out.println("Arvore AVL -> ordenando por ordem alfabetica pelo nome de usuário.");
         arvore = new ArvoreAvl();
         for(int i = 0; i < database.getTamanho(); i++){arvore.insertByUser(database.obter(i));}
-        EscritaDeArquivo.write_ordened_tree("tweets_mentioned_persons_user", arvore);
+        EscritaDeArquivo.write_ordened_tree("tweets_mentioned_persons_user_avlTree", arvore);
     }
 }

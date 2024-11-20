@@ -3,6 +3,6 @@ tweets_mentioned_persons.csv
 tweets.csv
 tweets_teste.csv
 
-tweets_mentioned_persons_count.csv
-tweets_mentioned_persons_date.csv
-tweets_mentioned_persons_user.csv
+tweets_mentioned_persons_count_avlTree.csv
+tweets_mentioned_persons_date_avlTree.csv
+tweets_mentioned_persons_user_avlTree.csv
