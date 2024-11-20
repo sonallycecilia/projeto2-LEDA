@@ -157,4 +157,25 @@ public class Tweet {
         setYear(Integer.parseInt(dates[2]));
     }
 
+    public static boolean compararDatas(Tweet date1, Tweet date2) {
+        if (date1.getYear() < date2.getYear()) {
+            return true;
+        } else if (date1.getYear() == date2.getYear()) {
+            if (date1.getMonth() < date2.getMonth()) {
+                return true;
+            } else if (date1.getMonth() == date2.getMonth()) {
+                return date1.getDay() < date2.getDay(); //se a data 1 for maior, retorna true, se não, retorna false
+            }
+        }
+        return false;
+    }
+
+    public static boolean compararStrings(Tweet user1, Tweet user2) {
+        if (user1 == null || user2 == null) {
+            throw new IllegalArgumentException("Os objetos Tweet não podem ser nulos.");
+        }
+        return user1.getUser().compareToIgnoreCase(user2.getUser()) < 0;
+    }
+
+
 }

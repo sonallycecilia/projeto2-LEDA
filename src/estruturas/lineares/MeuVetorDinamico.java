@@ -1,23 +1,19 @@
-package estruturas.lineares.indexada;
-
-import estruturas.lineares.EstruturaIF;
+package estruturas.lineares;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
-public class MeuVetorDinamico<E> implements EstruturaIF<E> {
-    int tamanhoAtual;
-    int capacidadeTotal;
-    public E[] valores;
+public class MeuVetorDinamico<E> implements Iterable<E> {
+    private int tamanhoAtual;
+    private int capacidadeTotal;
+    private E[] valores;
 
-    @SuppressWarnings("unchecked")  //ta dando warning na criação generica
+    @SuppressWarnings("unchecked")
     public MeuVetorDinamico() {
-        capacidadeTotal = 10;     
+        capacidadeTotal = 10;
         tamanhoAtual = 0;
-        valores = (E[]) new Object[capacidadeTotal];  
+        valores = (E[]) new Object[capacidadeTotal];
     }
 
-    @Override
     public void adicionar(E valor) {
         if (tamanhoAtual == capacidadeTotal) {
             redimensionar();
@@ -26,25 +22,21 @@ public class MeuVetorDinamico<E> implements EstruturaIF<E> {
         tamanhoAtual++;
     }
 
-    @SuppressWarnings("unchecked") //ta dando warning na criação generica
+    @SuppressWarnings("unchecked")
     private void redimensionar() {
-        capacidadeTotal *= 2; // Aumenta a capacidade do vetor (por exemplo, dobrando o tamanho)
+        capacidadeTotal *= 2;
         E[] novoArray = (E[]) new Object[capacidadeTotal];
-        
-        // Copia os elementos do vetor original para o novo vetor redimensionado
         System.arraycopy(valores, 0, novoArray, 0, tamanhoAtual);
         valores = novoArray;
     }
 
     public E obter(int indice) {
         if (indice < 0 || indice >= tamanhoAtual) {
-            System.out.println("Este índice não existe.");
-            return null; 
+            throw new IndexOutOfBoundsException("Este índice não existe.");
         }
         return valores[indice];
     }
 
-    @Override
     public int getTamanho() {
         return tamanhoAtual;
     }
@@ -58,17 +50,14 @@ public class MeuVetorDinamico<E> implements EstruturaIF<E> {
             throw new IndexOutOfBoundsException("Índice fora dos limites.");
         }
 
-        // Verifica se o vetor precisa ser redimensionado
         if (tamanhoAtual == capacidadeTotal) {
             redimensionar();
         }
 
-        // Desloca os elementos à direita para abrir espaço para o novo valor
         for (int i = tamanhoAtual; i > indice; i--) {
             valores[i] = valores[i - 1];
         }
 
-        // Insere o novo valor na posição indicada
         valores[indice] = valor;
         tamanhoAtual++;
     }
@@ -83,23 +72,22 @@ public class MeuVetorDinamico<E> implements EstruturaIF<E> {
         valores[indice2] = temp;
     }
 
-
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
-            private int indiceAtual = 0;
+            private int index = 0;
 
             @Override
             public boolean hasNext() {
-                return indiceAtual < tamanhoAtual;
+                return index < tamanhoAtual;
             }
 
             @Override
             public E next() {
                 if (!hasNext()) {
-                    throw new NoSuchElementException();
+                    System.out.println("Nao ha proximo.");
                 }
-                return valores[indiceAtual++];
+                return valores[index++];
             }
         };
     }

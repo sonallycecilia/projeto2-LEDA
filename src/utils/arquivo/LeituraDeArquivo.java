@@ -1,18 +1,18 @@
-package utils.arquivos;
+package utils.arquivo;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import estruturas.lineares.EstruturaIF;
+import estruturas.lineares.MeuVetorDinamico;
 import utils.Tweet;
 
 public class LeituraDeArquivo {
 
     public static final String DIR_PROJECT_DATABASE = System.getProperty("user.dir") + File.separator + "src" + File.separator + "database";
     
-    public static <T extends EstruturaIF<Tweet>> T extract_tweets_database(T estrutura) {
+    public static <T extends MeuVetorDinamico<Tweet>> T extract_tweets_database(T estrutura) {
         String path = DIR_PROJECT_DATABASE + File.separator + "tweets.csv";
         
         try (BufferedReader file = new BufferedReader(new FileReader(path))) {
@@ -30,7 +30,7 @@ public class LeituraDeArquivo {
                 i++;
             }
             
-            System.out.println("Extract database completed.");
+            System.out.println("Extração de dados completa.");
         } catch (IOException e) {
             System.out.println("Erro ao extrair dados.");
             e.printStackTrace();
@@ -39,7 +39,7 @@ public class LeituraDeArquivo {
         return estrutura;
     }
 
-    public static <T extends EstruturaIF<Tweet>> T extract_database(String name, T estrutura) {
+    public static <T extends MeuVetorDinamico<Tweet>> T extract_database(String name, T estrutura) {
         String path = DIR_PROJECT_DATABASE + File.separator + name + ".csv";
     
         try (BufferedReader file = new BufferedReader(new FileReader(path))) {

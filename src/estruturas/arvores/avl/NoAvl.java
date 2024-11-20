@@ -1,4 +1,4 @@
-package estruturas.arvores;
+package estruturas.arvores.avl;
 
 import estruturas.lineares.MinhaFila;
 import utils.Tweet;
@@ -6,13 +6,13 @@ import utils.Tweet;
 public class NoAvl {
     public Tweet key;
     public int height;
-    public NoAvl left, right, next;  // Adicionando o campo "next" para a fila
+    public NoAvl left, right, next;
     MinhaFila<Tweet> duplicates;
 
     public NoAvl(Tweet key) {
         this.key = key;
-        this.height = 1; // Ao criar um nó, a altura inicial é 1
-        this.next = null; // O próximo nó é inicialmente nulo
+        this.height = 1;
+        this.next = null;
         this.duplicates = new MinhaFila<>();
     }
 
