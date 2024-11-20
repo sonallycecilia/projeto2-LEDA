@@ -57,22 +57,25 @@ public class ArvoreAvl implements Iterable<Tweet> {
 
         return y;
     }
-
-
-    public void insertByCount(Tweet key) {
+    public void insertByCount(Tweet key){
         this.root = insertByCount(root, key);
     }
 
     private NoAvl insertByCount(NoAvl node, Tweet key) {
         if (node == null) return new NoAvl(key);
 
-        // Inserção com base no número de menções
-        if (key.getMentioned_person_count() < node.key.getMentioned_person_count()) {
+        // Inserção com base no número de menções (ordem decrescente)
+        if (key.getMentioned_person_count() > node.key.getMentioned_person_count()) {
             node.left = insertByCount(node.left, key);
-        } else {
+        } else if (key.getMentioned_person_count() < node.key.getMentioned_person_count()) {
             node.right = insertByCount(node.right, key);
+        } else {
+            // Adiciona o tweet na fila de duplicatas
+            node.duplicates.enqueue(key);
+            return node;
         }
 
+        // Atualiza a altura do nó
         node.height = 1 + Math.max(height(node.left), height(node.right));
 
         // Calcula o fator de balanceamento
@@ -80,22 +83,20 @@ public class ArvoreAvl implements Iterable<Tweet> {
 
         // Corrige desequilíbrios se necessário
         if (balance > 1) {
-            if (node.left != null && key.getMentioned_person_count() < node.left.key.getMentioned_person_count()) {
+            if (key.getMentioned_person_count() > node.left.key.getMentioned_person_count()) {
                 return rotateRight(node);
             }
-
-            if (node.left != null && key.getMentioned_person_count() > node.left.key.getMentioned_person_count()) {
+            if (key.getMentioned_person_count() < node.left.key.getMentioned_person_count()) {
                 node.left = rotateLeft(node.left);
                 return rotateRight(node);
             }
         }
 
         if (balance < -1) {
-            if (node.right != null && key.getMentioned_person_count() > node.right.key.getMentioned_person_count()) {
+            if (key.getMentioned_person_count() < node.right.key.getMentioned_person_count()) {
                 return rotateLeft(node);
             }
-
-            if (node.right != null && key.getMentioned_person_count() < node.right.key.getMentioned_person_count()) {
+            if (key.getMentioned_person_count() > node.right.key.getMentioned_person_count()) {
                 node.right = rotateRight(node.right);
                 return rotateLeft(node);
             }
@@ -103,6 +104,9 @@ public class ArvoreAvl implements Iterable<Tweet> {
 
         return node;
     }
+
+
+
 
     public void insertByDate(Tweet key) {
         this.root = insertByDate(root, key);
@@ -211,10 +215,21 @@ public class ArvoreAvl implements Iterable<Tweet> {
 
     private void inOrderTraversal(NoAvl node, MinhaFila<Tweet> elementos) {
         if (node != null) {
+            // Percorre o lado esquerdo
             inOrderTraversal(node.left, elementos);
+
+            // Adiciona o nó principal
             elementos.enqueue(node.key);
+
+            // Adiciona os duplicados, se existirem
+            for (Tweet tweetDuplicado : node.duplicates) {
+                elementos.enqueue(tweetDuplicado);
+            }
+
+            // Percorre o lado direito
             inOrderTraversal(node.right, elementos);
         }
     }
+
 
 }
